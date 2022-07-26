@@ -10,3 +10,13 @@ script:
   - docker run -e CI=true duong120798/react-app-dev npm run test -- --coverage
 
 language: node_js
+node_js:
+  - "16"
+
+deploy:
+  provider: elasticbeanstalk
+  region: ap-southeast-1a
+  app: "docker"\
+  env: "Docker_env"
+  on: 
+    branch: master
