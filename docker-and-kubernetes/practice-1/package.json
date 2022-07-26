@@ -1,0 +1,13 @@
+{
+    "dependencies": {
+        "express": "*",
+        "redis": "2.8"
+    },
+    "scripts": {
+        "dev": "npx nodemon node index.js",
+        "start": "node index.js"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    }
+}

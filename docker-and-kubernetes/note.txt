@@ -1,0 +1,25 @@
+1. build docker file
+# tác dụng và ý nghĩa: build Dockerfile
+# run: 
+- docker build -t [stephengrider][image_name]:[version] --force-rm -f Dockerfile .
+- docker build -t duong1200798/duongtest-redis:1 --force-rm -f Dockerfile .
+- docker build -t duong1200798/nodejs:16 --force-rm -f Dockerfile .
+
+2. docker commit: 
+# tác dụng và ý nghĩa
+- với Dockerfile chạy lệnh "CMD ["redis-server"]" thay co câu lệnh đó thì sử dụng docker commit 
+# run:
+- on mac/linux: docker commit -c 'CMD ["redis-server"]' ContainerID 
+- on windows: docker commit -c "CMD 'redis-server'" ContainerID
+
+3. docker port mapping:
+# tác dụng và ý nghĩa
+- export port in container to host
+# run:
+- docker run  -p [host_port][containter_port] [image_name]:[version]
+- docker run  -p 8080:8080 nodejs-16:1
+
+4. running test for REACT-APP:
+# run:
+- docker run [image_name]:[version] npm run test -- --coverage
+ 
