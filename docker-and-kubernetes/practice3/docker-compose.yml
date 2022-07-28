@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  # for folder server
+  postgres-express-server:
+    image: postgres
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    networks:
+      - express-server
+
+  # for folder server
+  redis-express-server:
+    image: redis
+    networks:
+      - express-server
+
+  # for folder server
+  node-express-server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_PORT=$POSTGRES_PORT
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+    networks:
+      - express-server
+
+  # for folder client
+  react-client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/appapp_modules
+
+  # for folder worker
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./worker:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+volumes:
+  postgres_volume:
+
+networks:
+  express-server:
+    driver: bridge
