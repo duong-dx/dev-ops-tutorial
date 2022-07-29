@@ -6,5 +6,6 @@ module.exports = {
     postgresDatabase: process.env.POSTGRES_DB,
     postgresPassword: process.env.POSTGRES_PASSWORD,
     postgresPort: process.env.POSTGRES_PORT,
-  };
+    portServer: process.env.SERVER_PORT,
+};
   

@@ -41,23 +41,23 @@ const redisPublisher = redisClient.duplicate();
 // Express route handlers
 
 app.get('/', (req, res) => {
-    res.send('hi')
+    res.send('hiiiiii')
 })
 
 
 app.get('/values/all', async (req, res) => {
-    const value = await pgClient.query('SELECT * FROM values');
-    
-    res.send(value.rows);
+    const data = await pgClient.query('SELECT number FROM values');
+
+    res.json(data);
 })
 
-app.get('values/current', async (req, res) => {
+app.get('/values/current', async (req, res) => {
     redisClient.hgetall('values', (err, values) => {
         res.send(values);
     });
 });
 
-app.post('values', async (req, res) => {
+app.post('/values', async (req, res) => {
     const index = req.body.index
 
     if (parseInt(index) > 400) {
@@ -72,4 +72,4 @@ app.post('values', async (req, res) => {
     res.send({working: true});
 });
 
-app.listen(5000, error => { console.log('Listening on port'); });
+app.listen(process.env.SERVER_PORT, error => { console.log('Listening on port....', error); });
