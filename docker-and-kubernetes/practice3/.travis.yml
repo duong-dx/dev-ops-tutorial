@@ -9,10 +9,10 @@ script:
   - docker run duong120798/react-test -e CI=true npm run test -- --coverage
 
 after_success:
-  - docker build -t duong1200798/multi-client ./client/Dockerfile ./client
-  - docker build -t duong1200798/multi-nginx ./nginx/Dockerfile ./nginx
-  - docker build -t duong1200798/multi-server ./nginx/server ./server
-  - docker build -t duong1200798/multi-worker ./worker/server ./worker
+  - docker build -t duong1200798/multi-client -f ./client/Dockerfile ./client
+  - docker build -t duong1200798/multi-nginx -f ./nginx/Dockerfile ./nginx
+  - docker build -t duong1200798/multi-server -f ./server/Dockerfile ./server
+  - docker build -t duong1200798/multi-worker -f ./worker/Dockerfile ./worker
   # login hub.docker
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # take those images and build to hub.docker
@@ -20,3 +20,21 @@ after_success:
   - docker push duong1200798/multi-nginx
   - docker push duong1200798/multi-server
   - docker push duong1200798/multi-worker
+deploy:
+  # fix elasticbeanstalk
+  provider: elasticbeanstalk
+  # region in aws choose
+  region: "ap-southeast-1"
+  # elasticbeanstalk app name
+  app: "multi-docker"
+  # elasticbeanstalk app name-env
+  env: "Multidocker-env"
+  # when create elasticbeanstalk => s3 auto create new S3 function
+  bucket_name: "elasticbeanstalk-ap-southeast-1-195211018705"
+  # in S3 function need create new folder directory "example - multi-docker"
+  bucket_path: "multi-docker"
+  on:
+    branch: master
+  # when create new IAM user have $AWS_ACCESS_KEY and $AWS_SECRET_KEY => add to travis-ci
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"

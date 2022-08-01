@@ -1,0 +1,67 @@
+0. Tạo mới ElasticBeanStalk
+- Create tên "multi-docker" với environment là "MultiDocker-env"
+
+1. Với môi trường local sẽ build container là postgres và redis
+
+2. Với production build trên AWS sẽ thay thế:
+    - postgres => RDS (Relation Database Service)
+    - redis => ElastiCache (EC)
+
+3. Tạo với RDS (Relation Database Service)
+- Chọn "postgres", chọn các option tương ứng
+- Setting DB instance identifier: "để tạm là multi-docker-postgres", Username, password, port tương ứng với .env file
+
+4. Tạo với ElastiCache (EC)
+- Chọn "Redis clusters" > "Create Redis clusters", chọn các option tương ứng
+- Setting Cluster info: "để tạm là tên multi-docker-redis", Username, password, port tương ứng với .env file
+- Chọn "Node type" => do nhu cầu sử dụng thấp nên chọn cache.t2.micro (0.5GB) đỡ tốn tiền
+- Chọn "Number of replicas" => 0
+- Tạo mới "Subnet group" => name: "redis-group"
+
+5. Tạo mới VPC group cho ElasticBeanStalk + RDS (Relation Database Service) + ElastiCache (EC)
+- Chọn service "VPC" => "security groups" -> name "multi-docker"
+- add rule cho VPC group:
+- "Inbound rules" =>
+    [
+        + custom TCP => cho postgres (port 5432) - Source (custom) -> chọn VPC group name "multi-docker" mới tạo
+        + custom TCP => cho redis (port 6379)  - Source (custom) -> chọn VPC group name "multi-docker" mới tạo
+    ]
+6. Quay lại với ElastiCache (EC)
+- Chọn "Redis clusters" > chon Redis clusters đã tạo (4) "multi-docker-redis" > chọn modify
+- Tiếp đến chọn "Selected security groups" > "Manage security groups" > chọn security groups ở (5) "multi-docker" và "default"
+
+
+7. Quay lại với RDS (Relation Database Service)
+- Chọn "Databases" > chon  (3) "multi-docker-postgres" > chọn modify
+-> Tiếp đến chọn "Selected security groups" > "Security group" > chọn security groups ở (5) "multi-docker" và "default"
+-> click "continue" > chọn "Apply immediately"
+
+8. Quay lại với ElasticBeanStalk
+- chọn "MultiDocker-env" đã tạo ở (0) > chọn "Configurations" > chọn "instances"
+-> "EC2 security groups" chọn (5) "multi-docker" và "default"
+
+9. Quay lại với ElasticBeanStalk
+- chọn "MultiDocker-env" đã tạo ở (0) > chọn "Configurations" > chọn "Software" > chonj "Environment properties"
+-> tiến hành setting các biến môi trường như trong .env
+ [
+    REDIS_HOST => phải là (4) ElastiCache (EC) "multi-docker-redis.tl3cn1.ng.0001.apse1.cache.amazonaws.com"
+    REDIS_PORT => phải là (4) PORT - ElastiCache (EC) "6379"
+
+    POSTGRES_USER= (3) RDS (Relation Database Service) - username
+    POSTGRES_PASSWORD= (3) RDS (Relation Database Service) - password
+    POSTGRES_DB=  (3) RDS (Relation Database Service) - Database name
+    POSTGRES_PORT= (3) RDS (Relation Database Service) - port
+    POSTGRES_HOST = (3) RDS (Relation Database Service) - Host "multi-docker-postgres.chyjepaejdxx.ap-southeast-1.rds.amazonaws.com"
+ ]
+
+10. add IAM user
+- tạo mới IAM user "multi-docker-user"
+- add $AWS_ACCESS_KEY và $AWS_SECRET_KEY vào travis-ci
+
+1xxx. xóa
+ - xóa ElasticBeanStalk
+ - xóa RDS (Relation Database Service)
+ - xóa ElastiCache (EC)
+ - xóa VPC group
+ - xóa S3 (cần vào xóa config trước)
+ - xóa IAM user
