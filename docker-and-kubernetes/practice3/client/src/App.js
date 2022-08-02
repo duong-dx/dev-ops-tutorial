@@ -10,45 +10,32 @@ function App() {
   });
 
   const fetchValues = async () => {
-    const values = await axios.get('/api/values/current');
+    const values1 = await axios.get('/api/values/current');
+    const values2 = await axios.get('/api/values/all');
 
     setDataState({
       ...dataState,
-      values: values.data
+      values: values1.data,
+      seenIndexes: values2.data
     })
   }
 
-  const fetchIndexes = async () => {
-    const values = await axios.get('/api/values/all');
-
-    setDataState({
-      ...dataState,
-      seenIndexes: values.data
-    })
-  }
-
-  const onChange = (event) => { 
+  const onChange = (event) => {
     event.preventDefault(); 
 
     setDataState({...dataState, index: event.target.value})
   }
 
   const renderSeenIndexes = () => {
-    return dataState.seenIndexes.map((index) => index).join(', ');
+    return dataState.seenIndexes.map((index) => index.number).join(', ');
   }
 
   const renderValues = () => {
-    const entries = [];
-
-    for (let key in dataState.values) {
-      entries.push(
-        <div key={key}>
-           for index {key} calculated {dataState.values[key]}
+    return dataState.values && Object.keys(dataState.values).map(( index) =>
+        <div key={index}>
+          for index {index} calculated {dataState.values[index]}
         </div>
-      )
-    }
-
-    return entries;
+    );
   }
 
   const handleSubmit = async () => {
@@ -64,7 +51,6 @@ function App() {
 
   useEffect(() => {
     fetchValues();
-    fetchIndexes();
   }, []);
 
   return (

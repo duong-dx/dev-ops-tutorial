@@ -1,0 +1,14 @@
+1. Cài đặt chocolatey
+> $ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+2. dùng chocolatey install minikube
+(minikube là công cụ để tạo 1 kube master và có duy nhất 1 node cho test dưới local)
+> $ choco install minikube
+
+3. Show all context
+Trên máy window đang dùng 2 context khác nhau
+> $ kubectl config get-contexts
+
+4. đổi context
+> $ kubectl config use-context [context_name]
+> $ kubectl config use-context docker-desktop

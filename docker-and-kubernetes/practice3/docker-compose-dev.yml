@@ -4,6 +4,7 @@ services:
   # for folder server
   postgres-express-server:
     container_name: postgres-express-server
+    hostname: postgres-express-server
     image: postgres
     volumes:
       - postgres_volume:/var/lib/postgresql/data
@@ -11,6 +12,7 @@ services:
       - POSTGRES_USER=$POSTGRES_USER
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_PORT=$POSTGRES_PORT
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     networks:
@@ -19,6 +21,7 @@ services:
   # for folder server
   redis-express-server:
     container_name: redis-express-server
+    hostname: redis-express-server
     image: redis
     networks:
       - express-server
@@ -26,7 +29,8 @@ services:
   # for folder server
   api-server:
     container_name: api-server
-    build: 
+    hostname: api-server
+    build:
       context: ./server
       dockerfile: Dockerfile.dev
     volumes:
@@ -37,6 +41,7 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_PORT=$POSTGRES_PORT
+      - POSTGRES_HOST=$POSTGRES_HOST
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
       - SERVER_PORT=$SERVER_PORT
@@ -46,6 +51,7 @@ services:
   # for folder client
   react-client:
     container_name: react-client
+    hostname: react-client
     build:
       context: ./client
       dockerfile: Dockerfile.dev
@@ -54,13 +60,14 @@ services:
       - WDS_SOCKET_PORT=0
     volumes:
       - ./client:/usr/src/app
-      - /usr/src/app/app_modules
+      - /usr/src/app/node_modules
     networks:
      - express-server
 
   # for folder worker
   worker:
     container_name: worker
+    hostname: worker
     build:
       context: ./worker
       dockerfile: Dockerfile.dev
@@ -76,6 +83,7 @@ services:
   # build nginx
   nginx:
     container_name: nginx
+    hostname: nginx
     build:
       context: ./nginx
       dockerfile: Dockerfile.dev
