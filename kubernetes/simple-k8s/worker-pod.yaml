@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: worker-pod
+  labels:
+    component: worker-component
+spec:
+  containers:
+    - name: worker
+      image: duong1200798/multi-worker
+      ports:
+        - containerPort: 3000

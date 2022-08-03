@@ -12,3 +12,23 @@ Trên máy window đang dùng 2 context khác nhau
 4. đổi context
 > $ kubectl config use-context [context_name]
 > $ kubectl config use-context docker-desktop
+
+5. apply file kubernetes
+> $ kubectl apply -f [file_name]
+> $ kubectl apply -f client-pod.yaml
+
+6. K8s get all pod
+> $ kubectl get pods
+
+7. K8s get all pod with labels
+> $ kubectl get pods --show-labels
+
+8. K8s get all services
+> $ kubectl get services
+
+9. K8s show detail all pod
+> $ kubectl describe pods
+
+10. K8s show detail 1 pod
+> $ kubectl describe pod [pod_name]
+> $ kubectl describe pod client-pod
