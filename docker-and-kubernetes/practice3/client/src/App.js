@@ -15,8 +15,8 @@ function App() {
 
     setDataState({
       ...dataState,
-      values: values1.data,
-      seenIndexes: values2.data
+      values: values1.data ?? {},
+      seenIndexes: values2.data ?? []
     })
   }
 

@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: client-node-port
 spec:
-  type: NodePort
+  type: NodePort # kind of service
   ports:
-    - port: 3050
-      targetPort: 3005
-      nodePort: 31515
+    - port: 3050 # port use for call container other in cluster
+      targetPort: 3005 # port of container in pod
+      nodePort: 31515 # port use for call from client
   selector:
-    component: web
+    component: web # label component of pod
