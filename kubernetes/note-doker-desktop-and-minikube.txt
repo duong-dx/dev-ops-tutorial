@@ -19,6 +19,8 @@ Trên máy window đang dùng 2 context khác nhau
 
 6. K8s get all pod
 > $ kubectl get pods
+- K8s get all pod advanced
+> $ kubectl get pods -o wide
 
 7. K8s get all pod with labels
 > $ kubectl get pods --show-labels
@@ -32,3 +34,44 @@ Trên máy window đang dùng 2 context khác nhau
 10. K8s show detail 1 pod
 > $ kubectl describe pod [pod_name]
 > $ kubectl describe pod client-pod
+
+11. K8s show list pod với thuộc tính
+> $ kubectl get pod -L [options]
+> $ kubectl get pod -L environment
+
+11. K8s show list pod với giá trị của thuộc tính
+> $ kubectl get pod -l [options]=[value]
+> $ kubectl get pod -l environment=production
+> $ kubectl get pod -l environment=develop
+
+12. get all namespace
+> $ kubectl get ns
+
+13. tạo mới 1 namespace
+> $ kubectl create ns [namespace]
+> $ kubectl create ns testing
+
+14. get all pods using namespace
+$ > kubectl get pod -n [namespace]
+$ > kubectl get pod -n testing
+
+14. delete post on namespace
+$ > kubectl delete pod [pod-name] -n [namespace]
+$ > kubectl delete pod hello-kube-testing -n [testing]
+
+15. delete namespace
+$ > kubectl delete ns testing
+
+16. show list replication controller
+$ > kubectl get rc
+
+17. delete replication controller (khi xóa thì các pod của nó cũng bị xóa theo)
+$ > kubectl delete rc [replication-controller-name]
+$ > kubectl delete rc replication-controller-name
+
+18. xóa config file
+$ > kubectl delete -f [file-name.extensions]
+$ > kubectl delete -f [file-name.extensions]
+
+19. K8s get deployment
+$ > kubectl get deployments

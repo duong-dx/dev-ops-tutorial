@@ -27,7 +27,7 @@ function App() {
   }
 
   const renderSeenIndexes = () => {
-    return dataState.seenIndexes.map((index) => index.number).join(', ');
+    return dataState.seenIndexes && dataState.seenIndexes.map((index) => index.number).join(', ');
   }
 
   const renderValues = () => {
@@ -55,6 +55,7 @@ function App() {
 
   return (
     <div className="App">
+      <h3>App client version2</h3>
       <input placeholder='enter your index' value={dataState.index} onChange={onChange}/>
       <button onClick={handleSubmit}>Submit</button>
 

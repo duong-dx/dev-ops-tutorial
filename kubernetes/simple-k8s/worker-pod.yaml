@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
     - name: worker
-      image: duong1200798/multi-worker
+      image: duong1200798/multi-server
       ports:
-        - containerPort: 3000
+        - containerPort: 5001

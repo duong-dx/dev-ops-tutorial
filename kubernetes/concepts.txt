@@ -1,0 +1,76 @@
+####. Kubernetes
+- Kubernetes được sinh ra để quản lý các container
+- Kubernetes bao gồm 2 thành phần chính
+    + Master nodes (control plane)
+    + Worker nodes
+
+1. Master node
+- Master nodes bao gồm 4 thành phần chính là API server, controller manager, Scheduler, Etcd (mình sẽ giải thích rõ chức năng của từng thành phần trong bài viết khác):
+    + API server: thành phần chính để giao tiếp với các thành phần khác
+    + Controller manager: gồm nhiều controller riêng cụ thể cho từng resource và thực hiện các chứng năng cụ thể cho từng thằng resource trong kube như create pod, create deployment, v...v...
+    + Scheduler: schedules ứng dụng tới node nào
+    + Etcd: là một database để lưu giữ trạng thái và resource của cluster
+2. Worker node
+Worker node gồm 3 thành phần chính như:
+    + Container runtime (docker, rkt hoặc nền tảng khác): chạy container
+    + Kubelet: giao tiếp với API server và quản lý container trong một worker node
+    + Kubernetes Service Proxy (kube-proxy): quản lý network và traffic của các ứng dụng trong woker node
+
+3. POD
+- POD là thành phần nhỏ nhất trong K8s
+- POD là thành phần của Worker Node
+- POD được sinh ra để quản lý các 1 hoặc 1 nhóm containers
+- POD có khả năng tự restart lại container nếu có bị FAIL
+
+
+4. Replication Controllers
+- replication controller có thể control được trên nhiều NODE, mỗi node có thể controll "nhiều POD"
+- replication controller sinh ra để quản lý các pod "thông qua labels của pod"
+- Vì sao cần dùng Replication Controllers
+    + Do pod quản lý các container, nhưng khi các container bị sập hết => pod cũng sập
+    + Nên khi sử dụng Replication Controllers sẽ đảm bảo được số pod của Worker Node đó luôn được duy trì
+- Có thể tăng performance của ứng dụng khi sử dụng replication controller bằng các sử dụng nhiều replica trong replication controller
+  để replication controller tạo nhiều pod
+
+5. ReplicaSet
+- ReplicaSet có thể control được trên nhiều NODE, mỗi node có thể controll "nhiều POD"
+- ReplicaSet giống với replication controller
+- nhưng replicaSet sẽ khác replication controller ở phần label selector. replicaSet có thể lấy nhiều thuộc tính hơn,
+ trong khi chỉ lấy đc label selector mà replication controller đã chỉ định
+
+6. DaemonSets
+- DaemonSets có thể control được trên nhiều NODE, mỗi node có thể controll "1 POD"
+- DaemonSets giống với replication controller
+
+6. Kubernetes Services
+- Kubernetes Services là một resource sẽ tạo ra 1 single, constant point cho 1 hoặc nhóm POD mà nó đứng sau
+- mỗi Service sẽ có 1 ip, port không đổi cho đến khi nó bị xóa đi
+- Client hoặc các ứng dụng khác mở kết nối đến Service sẽ kết nối được đến Container mà nó đứng sau
+- Đặt vấn đề tại sao phải dùng đến service ?
+    + Khi một pod là phù du, với bất cứ lý do nào nó bị xóa đi hoặc die.
+    Hoặc khi ta thay đổi template của 1 POD thì pod cũ được xóa đi và được tạo mới trên một Node khác,
+    => thì ip của POD đó được thay đổi. nếu ta dùng ip cũ connect thì sẽ sai và phải đi sửa lại code
+    + Khi ta dùng ReplicaSet để tạo các Pod, ví dụ replicaSet = 3 thì làm sao để ta có thể biết sử dụng POD nào ?
+    => sử dụng Services và dùng endpoint của service
+- Service quản lý connection như thế nào:
+    + service sử dụng "label của POD" để quản lý
+- Service sẽ có 4 loại cơ bản là:
+ + ClusterIP
+ + NodePort
+ + ExternalName
+ + LoadBalancer
+
+ (a). ClusterIP
+     - loại service sẽ tạo một IP và local DNS.
+     => IP và local DNS có thể truy cập ở bên trong cluster nhưng không thể truy cập từ bên ngoài.
+      được dùng chủ yếu cho các Pod ở bên trong cluster dễ dàng giao tiếp với nhau.
+      ví dụ : https://viblo.asia/p/kubernetes-series-bai-4-services-expose-traffic-cho-pod-Ljy5VDm9Zra
+ (b). NodePort
+    - là loại service cung cấp port để truy cập từ bên trong cluster bằng IP và DNS,
+    - nodePort truy cập từ bên ngoài client vào sẽ range từ 30000 - 32767
+ (c). LoadBalancer
+    - Tạo ra Public IP giúp client có thể kết nối được ip ở trong POD
+    - Chỉ sử dụng được khi thực hiện deploy kubernetes trên cloud có hỗ trợ "LoadBalancer Service"
+ (d). Ingress resource
+    Ingress là một resource cho phép chúng ta expose HTTP and HTTPS routes từ bên ngoài cluster tới service bên trong cluster của chúng ta.
+    Ingress sẽ giúp chúng ta gán một domain thực tế với service bên trong cluster. Ví dụ:

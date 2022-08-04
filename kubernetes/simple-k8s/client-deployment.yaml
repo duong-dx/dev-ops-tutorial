@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 2 # use replicaSet start 2 pod
+  selector:
+    matchLabels:
+      component: web # replica mapping to label of pod
+  template: # template for pod
+    metadata:
+      labels:
+        component: web # pod label
+        environment: production # label with key is environment and value is production
+        project: kubernetes-tutorial
+    spec:
+      containers:
+        - name: client
+          image: duong1200798/multi-client
+          ports:
+            - containerPort: 3005
