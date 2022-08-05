@@ -1,0 +1,5 @@
+Step by step in note
+
+1. go to EC2 console > Volume > ElasticBlockStore > Create new volume
+
+2.

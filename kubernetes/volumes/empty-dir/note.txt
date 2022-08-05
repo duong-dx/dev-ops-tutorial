@@ -1,0 +1,19 @@
+Step by step in note
+
+1. go to directory
+
+2. build Dockerfile
+$ > docker build -t duong1200798/luksa-fortune .
+
+3. Push images to hub.docker
+$ > docker push duong1200798/luksa-fortune
+
+4. apply yaml file
+$ > kubectl apply -f empty-dir.yaml
+
+5. port forward for Pod
+$ > kubectl port-forward empty-dir-volume 8081:80
+
+6. open browser "127.0.0.1:8081"
+
+7. done => delete apply

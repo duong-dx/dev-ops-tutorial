@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: empty-dir-volume
+spec:
+  containers:
+    - name: html-generator
+      image: duong1200798/luksa-fortune
+      volumeMounts:
+        - name: html-dir
+          mountPath: /var/htdocs # mount path with volumes
+    - name: web-server
+      image: nginx:alpine
+      ports:
+        - containerPort: 80
+          protocol: TCP
+      volumeMounts:
+        - name: html-dir
+          mountPath: /usr/share/nginx/html # mount path with volumes
+  volumes:
+    - name: html-dir # volume name
+      emptyDir: {} # define type volumes is emptyDir

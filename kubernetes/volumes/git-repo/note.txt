@@ -1,0 +1,12 @@
+Step by step in note
+
+1. go to directory
+2. apply yaml file
+$ > kubectl apply -f git-repo.yaml
+
+3. exec to pod for check
+$ > kubectl exec -it git-repo-volume-pod sh
+
+4. cd to directory for check
+
+5. done => delete apply

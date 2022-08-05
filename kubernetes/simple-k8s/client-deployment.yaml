@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: client-deployment
 spec:
+  revisionHistoryLimit: 10 # number history of deployment
   replicas: 2 # use replicaSet start 2 pod
   selector:
     matchLabels:
