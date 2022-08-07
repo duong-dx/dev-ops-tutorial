@@ -93,3 +93,7 @@ $ > kubectl rollout undo deployment deployment_name --to-revision=2
 
 24. get log of pod
 $ > kubectl logs my-pod
+
+25. create secret key
+$ > kubectl create secret [type] [name] --from-literal key=value
+$ > kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password

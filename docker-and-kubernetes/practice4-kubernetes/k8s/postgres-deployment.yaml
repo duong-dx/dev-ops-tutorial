@@ -14,8 +14,28 @@ spec:
         environment: production
         project: practice4-kubernetes
     spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
       containers:
         - name: postgres
           image: postgres
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgresql
+          env:
+            - name: POSTGRES_USER
+              value: root
+            - name: POSTGRES_PASSWORD # POSTGRES_PASSWORD create by secret
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              value: multi_docker_database
+            - name: POSTGRES_PORT
+              value: '5432'
