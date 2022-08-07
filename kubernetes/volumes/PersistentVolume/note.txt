@@ -1,0 +1,12 @@
+PVC: PersistentVolumeClaim
+PV: PersistentVolume
+1. tạo file persistent-volume.yaml
+
+2. kubectl apply -f persistent-volume.yaml
+
+3. tạo file persistent-volume-claim.yaml
+
+4. kubectl apply -f persistent-volume-claim.yaml
+ - ở đây khi thực hiện apply thì PVC tự tìm kiếm xem có PV nào thỏa mãn không và tự bound
+
+5. tạo mới Pod sử dụng PersistentVolumeClaim

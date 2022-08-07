@@ -1,0 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StoragesClass
+metadata:
+  name: storage-class-fast
+# provisioner: kubernetes.io/gce-pd # use gce-pd provisioner of google
+provisioner: kubernetes.io/aws-ebs # use aws-ebs provisioner of AWS
+parameters:
+  type: gp2
+  zone: ap-southeast-1

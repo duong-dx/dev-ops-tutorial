@@ -127,3 +127,34 @@ Cơ bản sẽ chia làm 3 dạng chính:
   + AWS: awsElasticBlockStore
   + Goolge Cloud: gcePersistentDisk
   + Azure: azureDisk.
+
+7. PersistentVolume và PersistentVolumeClaim
+- như volume ở bên trên thì ta cần quan tâm đến cơ sở hạ tầng của volume
+- Nhưng "PersistentVolume và PersistentVolumeClaim" không cần quan tâm đến hạ tầng, chỉ
+cần quan tâm đến Size mà sẽ sử dụng
+- PersistentVolume là resource sinh ra để tiêu thụ và tương tác với storage.
+ Còn PersistentVolumeClaim là resource sinh ra để request và tương tác với PersistentVolume
+
+* trong Kubernetes sẽ chia làm 2 role:
+- Kubernetes admin: người dựng và quản lý kubernetes cluster, cài những plugin và addons cần thiết cho kubernetes cluster.
+- Kubernetes developer: người mà sẽ viết file config yaml để deploy ứng dụng lên trên kubernetes.
+
+=> Kubernetes admin: sẽ tạo PersistentVolume và thiết kế hạ tầng của "PersistentVolume"
+Kubernetes developer: sẽ tạo PersistentVolumeClaim dựa trên config của PersistentVolume
+
+- Ví dụ "./volumes/PersistentVolume"
+
+* Recycling PersistentVolumes
+- persistentVolumeReclaimPolicy: sẽ định nghĩa hoạt động của PersistentVolumes
+như thế nào khi PersistentVolumeClaim bị xóa :
++ Retain: duy trì và chờ kết nối mới, "Dữ liệu vẫn còn đó"
++ Recycle: duy trì và chờ kết nối mới, "Dữ liệu bị xóa"
++ Delete: Xóa hết
+
+* Tự động cấp PersistentVolumes (Dynamic provisioning)
+ Để tránh việc việc admin phải tạo PersistentVolume thì K8s hỗ trợ tạo PersistentVolumeClaim và tự tạo PersistentVolume
+- admin phải tạo PersistentVolume: Pre provisioning
+- PersistentVolumeClaim và tự tạo PersistentVolume: Dynamic provisioning
+=> muốn làm được việc này cần phải tạo StorageClass
+- Ví dụ "./volumes/PersistentVolume/storage-class"
+https://viblo.asia/p/kubernetes-series-bai-7-persistentvolumeclaims-tach-pod-ra-khoi-kien-truc-storage-ben-duoi-6J3Zgyeq5mB

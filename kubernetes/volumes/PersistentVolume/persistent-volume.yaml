@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: persistent-volume
+spec:
+  capacity:
+    storage: 100Mi # size of storage
+  accessModes:
+    - ReadWriteOnce # once worker node for read and write to volume
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  awsElasticBlockStore: # using AWS ElasticBlockStore instead of gcePersistentDisk
+    volumeID: "vol-0f5ce9f935074354d"
+    fsType: ext4
