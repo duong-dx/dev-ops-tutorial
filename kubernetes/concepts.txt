@@ -158,3 +158,12 @@ như thế nào khi PersistentVolumeClaim bị xóa :
 => muốn làm được việc này cần phải tạo StorageClass
 - Ví dụ "./volumes/PersistentVolume/storage-class"
 https://viblo.asia/p/kubernetes-series-bai-7-persistentvolumeclaims-tach-pod-ra-khoi-kien-truc-storage-ben-duoi-6J3Zgyeq5mB
+
+8. Environment - configmap - secret
+- Environment: truyền env vào trong container
+- configmap:
+    + 1. Tạo mới một file config map data là chứa thông tin Environment để sử dụng khi tạo pod
+    + 2. data chứa content của 1 file
+- secret: tạo mới 1 secret để cho bảo mật:
+$ > kubectl create secret [type] [name] --from-literal key=value
+$ > kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password

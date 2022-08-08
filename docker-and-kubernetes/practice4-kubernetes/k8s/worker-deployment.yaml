@@ -17,6 +17,9 @@ spec:
       containers:
         - name: worker
           image: duong1200798/multi-worker
+          envFrom:
+            - configMapRef:
+                name: worker-config-map
           env:
             - name: REDIS_HOST
               value: redis-cluster-ip-service
