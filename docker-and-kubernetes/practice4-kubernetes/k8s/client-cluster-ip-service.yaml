@@ -7,5 +7,5 @@ spec:
   selector:
     component: web # label component of client container
   ports:
-    - port: 3050 # this port of service
+    - port: 3005 # this port of service
       targetPort: 3005 # port of client container

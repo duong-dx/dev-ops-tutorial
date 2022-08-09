@@ -20,8 +20,8 @@ spec:
           ports:
             - containerPort: 5001 # use port of image expose
           envFrom: # using envFrom instead of env
-            - configMapRef: # referencing the ConfigMap
-                name: server-config-map # name of the ConfigMap
+          - configMapRef: # referencing the ConfigMap
+              name: server-config-map # name of the ConfigMap
           env:
             - name: POSTGRES_PASSWORD # POSTGRES_PASSWORD create by secret
               valueFrom:
