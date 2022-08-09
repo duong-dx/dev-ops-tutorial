@@ -97,3 +97,15 @@ $ > kubectl logs my-pod
 25. create secret key
 $ > kubectl create secret [type] [name] --from-literal key=value
 $ > kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password
+
+
+26. Turn on/of hyper-v in window
+- on :
+$ > DISM /Online /Enable-Feature:Microsoft-Hyper-V
+$ > bcdedit /set hypervisorlaunchtype auto
+chạy xong cần restart máy
+
+- off :
+$ > DISM /Online /Disable-Feature:Microsoft-Hyper-V
+$ > bcdedit /set hypervisorlaunchtype off
+chạy xong cần restart máy

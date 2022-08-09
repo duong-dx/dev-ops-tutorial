@@ -28,8 +28,8 @@ spec:
               mountPath: /var/lib/postgresql/data
               subPath: postgresql
           envFrom:
-            - configMapRef:
-                name: postgres-config-map
+          - configMapRef:
+              name: postgres-config-map
           env:
             - name: POSTGRES_PASSWORD # POSTGRES_PASSWORD create by secret
               valueFrom:
