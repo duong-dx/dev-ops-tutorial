@@ -163,7 +163,7 @@ https://viblo.asia/p/kubernetes-series-bai-7-persistentvolumeclaims-tach-pod-ra-
 - Environment: truyền env vào trong container
 - configmap:
     + 1. Tạo mới một file config map data là chứa thông tin Environment để sử dụng khi tạo pod
-    + 2. data chứa content của 1 file
+    + 2. data chứa content của 1 file (ví dụ: ./environment)
 - secret: tạo mới 1 secret để cho bảo mật:
 $ > kubectl create secret [type] [name] --from-literal key=value
 $ > kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: nginx
+  template:
+    metadata:
+      labels:
+        component: nginx
+        environment: development
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+      volumeMounts:
+        - name: nginx-volume
+          mountPath: /etc/nginx/conf.d/  # path of node
+          subPath: default.conf # path of volume mount to -> pod
+          defaultMode: "0600"
+    volumes:
+      - name: nginx-volume
+        configMap:
+          name: nginx-config-map
+          item:
+            - key: default.conf
+              path: gzip.conf # change name of file from default.conf to gzip.conf
