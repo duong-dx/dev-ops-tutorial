@@ -167,3 +167,20 @@ https://viblo.asia/p/kubernetes-series-bai-7-persistentvolumeclaims-tach-pod-ra-
 - secret: tạo mới 1 secret để cho bảo mật:
 $ > kubectl create secret [type] [name] --from-literal key=value
 $ > kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password
+
+9. StatefulSets
+- Giống như là replicasSet. Nhưng trong khi replica tạo ra các Pod với tên ngẫu nhiên thì
+StatefulSet tạo ra các Pod đánh số index từ 0 -> n;
+
+- Khi một pod vì 1 lý do nào đó bị kill: Cả replicas và statefulSet đều tạo ra pod mới
+    + replicas tạo ra pod mới -> có tên random mới (ví dụ pod-a-453fsfsd bị chết sẽ tọa pod-a-78fdgd)
+    + statefulSet tạo ra pod mới -> có tên giữ nguyên (ví dụ pod-a-0 bị chết sẽ tọa pod-a-0)
+
+- ScaleUp và ScaleDown
+    + ScaleUp tạo mới POD có index tiếp theo (ví dụ pod-a-5 tạo pod-a-6)
+    + ScaleDown tạo shutdown POD có index lớn nhất (ví dụ pod-a-1 -> pod-a-6 sẽ shutdown pod-a-6)
+- storage of Pod:
+ + Với POD đươc quản lý bằng Replicas: Khi pod bị xóa storage sẽ bị xóa hết đi
+ + Với POD đươc quản lý bằng statefulSet: Khi pod bị xóa storage vẫn còn (do statefulSet sử dụng PersistentVolumeClaim).
+    Và khi pod đó được up lên dữ liệu vẫn ở nguyên đó
+    Tên của PersistentVolumeClaim sẽ được đặt theo cái pod đã đặt
