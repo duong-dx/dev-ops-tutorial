@@ -52,60 +52,60 @@ Trên máy window đang dùng 2 context khác nhau
 > $ kubectl create ns testing
 
 14. get all pods using namespace
-$ > kubectl get pod -n [namespace]
-$ > kubectl get pod -n testing
+> $ kubectl get pod -n [namespace]
+> $ kubectl get pod -n testing
 
 14. delete post on namespace
-$ > kubectl delete pod [pod-name] -n [namespace]
-$ > kubectl delete pod hello-kube-testing -n [testing]
+> $ kubectl delete pod [pod-name] -n [namespace]
+> $ kubectl delete pod hello-kube-testing -n [testing]
 
 15. delete namespace
-$ > kubectl delete ns testing
+> $ kubectl delete ns testing
 
 16. show list replication controller
-$ > kubectl get rc
+> $ kubectl get rc
 
 17. delete replication controller (khi xóa thì các pod của nó cũng bị xóa theo)
-$ > kubectl delete rc [replication-controller-name]
-$ > kubectl delete rc replication-controller-name
+> $ kubectl delete rc [replication-controller-name]
+> $ kubectl delete rc replication-controller-name
 
 18. xóa config file
-$ > kubectl delete -f [file-name.extensions]
-$ > kubectl delete -f [file-name.extensions]
+> $ kubectl delete -f [file-name.extensions]
+> $ kubectl delete -f [file-name.extensions]
 
 19. K8s get deployment
-$ > kubectl get deployments
+> $ kubectl get deployments
 
 20. K8s Redeployment
-$ > kubectl set image [object]/[object_name] [container_name]=[image_name]:[version]
-$ > kubectl set image deployment/client-deployment client=duong1200798/multi-client:v2
+> $ kubectl set image [object]/[object_name] [container_name]=[image_name]:[version]
+> $ kubectl set image deployment/client-deployment client=duong1200798/multi-client:v2
 
 21. check quá trình update lại các pod của deployment
-$ > kubectl rollout status deploy [deployment_name]
-$ > kubectl rollout status deploy deployment_name
+> $ kubectl rollout status deploy [deployment_name]
+> $ kubectl rollout status deploy deployment_name
 
 22. Show history của deployment
-$ > kubectl rollout history deploy
+> $ kubectl rollout history deploy
 
 23. rollback deployment to history version
-$ > kubectl rollout undo deployment [deployment_name] --to-revision=[version]
-$ > kubectl rollout undo deployment deployment_name --to-revision=2
+> $ kubectl rollout undo deployment [deployment_name] --to-revision=[version]
+> $ kubectl rollout undo deployment deployment_name --to-revision=2
 
 24. get log of pod
-$ > kubectl logs my-pod
+> $ kubectl logs my-pod
 
 25. create secret key
-$ > kubectl create secret [type] [name] --from-literal key=value
-$ > kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password
+> $ kubectl create secret [type] [name] --from-literal key=value
+> $ kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password
 
 
 26. Turn on/of hyper-v in window
 - on :
-$ > DISM /Online /Enable-Feature:Microsoft-Hyper-V
-$ > bcdedit /set hypervisorlaunchtype auto
+> $ DISM /Online /Enable-Feature:Microsoft-Hyper-V
+> $ bcdedit /set hypervisorlaunchtype auto
 chạy xong cần restart máy
 
 - off :
-$ > DISM /Online /Disable-Feature:Microsoft-Hyper-V
-$ > bcdedit /set hypervisorlaunchtype off
+> $ DISM /Online /Disable-Feature:Microsoft-Hyper-V
+> $ bcdedit /set hypervisorlaunchtype off
 chạy xong cần restart máy

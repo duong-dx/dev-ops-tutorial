@@ -6,13 +6,13 @@
 > $ choco install minikube
 
 3. install Hyper-V virtual machine
-$ > Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+> $ Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 
 4. start minikube
-$ > minikube start --vm-driver=[driver_name]
-$ > minikube start --vm-driver=docker
-$ > minikube start --vm-driver=hyperv
+> $ minikube start --vm-driver=[driver_name]
+> $ minikube start --vm-driver=docker
+> $ minikube start --vm-driver=hyperv
 
 5. ssh to minikube
-$ > minikube shh
+> $ minikube shh
 

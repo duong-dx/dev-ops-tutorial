@@ -7,5 +7,5 @@ spec:
   selector:
     component: server # label of pod container
   ports:
-    - port: 3051 # this port of service
+    - port: 5001 # this port of service
       targetPort: 5001 # port of server container
