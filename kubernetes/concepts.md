@@ -165,8 +165,8 @@ https://viblo.asia/p/kubernetes-series-bai-7-persistentvolumeclaims-tach-pod-ra-
     + 1. Tạo mới một file config map data là chứa thông tin Environment để sử dụng khi tạo pod
     + 2. data chứa content của 1 file (ví dụ: ./environment)
 - secret: tạo mới 1 secret để cho bảo mật:
-$ > kubectl create secret [type] [name] --from-literal key=value
-$ > kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password
+> $ kubectl create secret [type] [name] --from-literal key=value
+> $ kubectl create secret generic postgres-password --from-literal POSTGRES_PASSWORD=password
 
 9. StatefulSets
 - Giống như là replicasSet. Nhưng trong khi replica tạo ra các Pod với tên ngẫu nhiên thì
@@ -184,3 +184,16 @@ StatefulSet tạo ra các Pod đánh số index từ 0 -> n;
  + Với POD đươc quản lý bằng statefulSet: Khi pod bị xóa storage vẫn còn (do statefulSet sử dụng PersistentVolumeClaim).
     Và khi pod đó được up lên dữ liệu vẫn ở nguyên đó
     Tên của PersistentVolumeClaim sẽ được đặt theo cái pod đã đặt
+- Headless Service
+ + Khi dùng Service ClusterIP với replicas:
+    ví dụ replica name là replica-service-name + sẽ tạo 2 pod
+    => DNS: replica-service-name.default.svc.cluster.local
+       VirtualIP: 170.1.19.4
+       IP pod-abc: 170.1.19.5
+       IP pod-xyz: 170.1.19.7
+ + Khi dùng Service ClusterIP với StatefulSet:
+     ví dụ StatefulSet name là stateful-service-name + sẽ tạo 2 pod
+     => DNS: stateful-name.default.svc.cluster.local
+        DNS pod-0: stateful-service-name-0.stateful-service-name.default.svc.cluster.local
+        DNS pod-1: stateful-service-name-1.stateful-service-name.default.svc.cluster.local
+(ví dụ: ./template/test-stateful-set.yaml và https://viblo.asia/p/kubernetes-series-bai-9-statefulsets-deploying-replicated-stateful-applications-07LKXkXp5V4)
