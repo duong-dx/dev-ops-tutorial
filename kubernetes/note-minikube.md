@@ -14,5 +14,9 @@
 > $ minikube start --vm-driver=hyperv
 
 5. ssh to minikube
-> $ minikube shh
+> $ minikube ssh
+
+6. open minikube dashboard
+- go to minikube-ip:30000
+> $ minikube dashboard
 
