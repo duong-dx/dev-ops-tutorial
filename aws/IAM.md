@@ -21,4 +21,4 @@
 - go ahead choose "service" >  choose "Permission Policy" for "Role"
 
 5. IAM security tool
-- IAM credentials report: report  list all your account users and status the info credentials
+- IAM credentials report: report list all your account users and status the info credentials
