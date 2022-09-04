@@ -1,3 +1,7 @@
+DEMO Following
+https://www.youtube.com/watch?v=Hf8wHZ6YUwU
+
+
 **1. What is DNS**
 - DNS stands Domain Name System which translates the human friendly hostnames into the machine IP address
   Hệ thống tên miền cái mà dịch tên máy chủ thân thiện với con người vào trong địa chỉ IP của máy
@@ -60,7 +64,7 @@ _2.1 Route 53 - Hosted Zone_
 - You pay $0.5 / month / hosted zone
 
 **3.Amazon Route 53 - TTL (Time To Live)**
-![img.png](img.png)
+![img.png](images/img_37.png)
 
 - TTL stands Time To Live
 - If you set High TTL: (e.g 24 hour)
@@ -71,3 +75,57 @@ _2.1 Route 53 - Hosted Zone_
   - Records are outdated for less time: Records bị lỗi thời sẽ ít hơn
   - easy to change record
 - Except for Alias Record, TTL is mandatory for each DNS Record: Ngoài trừ "Alias Record", TTL là bắt buộc đối với mỗi records
+
+
+**4. CNAME vs Alias**
+- AWS Resource (Elastic Load Balancer, CloudFront...) expose an AWS host name
+  lb1-1234.us-east-2.elb.amazonaws.com and you want myapp.mydomain.com
+- CNAME:
+  - Points a hostname to any other hostname. (app.mydomain.com => blabla.anthing.com)
+  - Only for non-root Domain (aka.something.mydomain.com)
+- Alias:
+  - Points a hostname to an AWS Resource (app.mydomain.com => blala.amazonaws.com)
+  - Works for Root Domain and non-root domain (aka mydomain.com)
+  - free for charge: miễn phí
+  - native health check
+- Alias Records:
+  - Map a hostname to an AWS resource
+  - An extension to DNS functionality: một phần mở rộng cho các chức năng của DNS 
+  - Alias Records automatically recognizes changes in the resource IP address: tự động phát hiện thay đổi tài nguyên trong địa chỉ IP
+  - Unlike CNAME,  Alias Records can be used for  the top node of DNS namespace (Zone Apex), eg: example.com
+  Không giống CNAME, Alias Record có thể được sử dụng cho node trên cùng của DNS namespace called the Zone Apex
+  - Alias Record is always of type A/ AAAA for AWS resources (ipv4 / ipv6)
+  - You can NOT set TTL
+- Alias Records Target:
+  - Elastic Load Balancers 
+  - CloudFront Distributions
+  - API Gateway
+  - Elastic Beanstalk environments
+  - S3 Website
+  - VPC interface Endpoint
+  - Global accelerator
+  - Route53 record in the same hosted zone
+  - You can not set a ALIAS record for EC2 DNS name
+
+**5. Route53 - Routing Policies**
+- Define how Route 53 responds to DNS queries
+- Don't get confused Routing Policies by the word "Routing": Không nhầm lẫn Routing Policies với RRouting-
+  - It is NOT the same as Load Balancer routing and the load balancer will routing traffic
+  - DNS does not route any traffic (traffic don't through DNS), it only respond to the DNS queries : DNS không định tuyến lưu lượng truy cập, nó chỉ trả lời các truy vấn DNS 
+- Route 53 supports the following Routing Policies: Route 53 hỗ trợ Routing Policies sau:
+  - Simple: đơn giản
+  - Wighted: có trọng số, có trọng lượng
+  - Failover: chuyển đổi dự phòng
+  - Latency based: dự trên độ trễ
+  - Multi-value Answer
+  - Geoproximity: địa chỉ gần gũi (using Route 53 flow feature)
+  - geolocation: vị trí đia lý
+
+**6. Routing Policies - Simple**
+![img_1.png](images/img_38.png)
+- Typically, route traffic to a single resource: tiêu biểu, định tuyến lưu lượng truy cập đến 1 tài nguyên duy nhất
+- Can specify multiple value in the same record: có thể chỉ định nhiều giá trị trong 1 cùng 1 Record
+- If multiple value are returned by DNS, Then a random one will be chosen by the client: 
+ Nếu nhiều quá trị được trả vể bởi DNS, sau đó ngẫu nhiên 1 sẽ được chọn bởi client
+- When Alias enable, specify only one AWS resource
+- Can't be associated with Health checks: không thể kết hợp với health check
