@@ -129,3 +129,129 @@ _2.1 Route 53 - Hosted Zone_
  Nếu nhiều quá trị được trả vể bởi DNS, sau đó ngẫu nhiên 1 sẽ được chọn bởi client
 - When Alias enable, specify only one AWS resource
 - Can't be associated with Health checks: không thể kết hợp với health check
+
+**7. Routing Policies - Weighted**
+- Control the % of the requests that go to each specific resource: Điều khiển % của các request rằng đi đến mỗi một tài nguyên cụ thể
+- Assign each record a relative weight: gán mỗi record với một lượng tương đối
+  - traffic (%) = (Weight for a specific record) / (Sum of all weights for all records)
+  - Weights don't need to sum up to 100
+- DNS record must have the same name and same type 
+- Can be associated to Health Check: có thể liên kết với Health check
+- USE CASE: Load Balancer between regions, test new application version ...
+- Assign a Weight of 0 to a Record to stop sending traffic to resource
+- if all records have weight set to 0, then all records will be returned equally
+  nếu tất cả record có weight là 0 thì tất cả record sẽ được bằng nhau
+
+**8. Routing Policies - Latency-based**
+Dựa trên độ trễ
+- Redirect to the resource that has least latency close to us: Chuyển hướng đến resource có độ trễ ít nhất và "gần" với chúng ta
+- Super helpful when latency for user is a priority: rất hữu ích khi độ trễ cho bạn một quyền ưu tiên
+- Latency is based on traffic between users and AWS regions: Độ trễ dựa trên lưu lượng truy cập giữa người dùng và AWS Regions
+- Example: Germany users may be directed to the US (if that is the lowest latency): người dùng ở đức có thể đi thẳng thới the US ( nếu ở Germany lowest latency)
+- Can be associated with Health Check (has a failorver capability): Có thể  liên kết với health check (có năng lực khôi phục dự phòng)
+
+**9. Routing Policies - Health Checks**
+![img.png](images/img_39.png)
+- Http Health Checks are only for public resource
+- Health check => Auto DNS failover: Health check
+  - Health checks that monitor an endpoint (application, server, other AWS resource): Health check sẽ theo giõi, giám sát 1 điểm cuối
+  - Health checks that monitor another health checks: Health check sẽ theo dõi 1 health check khác
+  - Health checks that monitor CloudWatch Alarm (full control) - e.g throttles of Dynamo DB, alarm on RDS, custom metrics ... (Helpful for private resource)
+    Health checks theo dõi CloudWatch cảnh báo (tất cả điều khiển) - ví dụ điều tiết Dynamo DB, cảnh bảo on RDS, tùy chỉnh số liệu... (hữu ích cho tài nguyên private)
+- Health Checks are integrated with CW metrics: Health check tích hợp với CloudWatch với các số liệu
+
+_9.1 Health Checks - Monitor an Endpoint_
+![img.png](images/img_40.png)
+- About 15 global health checkers will check the endpoint heath: Khoảng 15 health checkers tòan cầu sẽ kiểm tra sửa khỏe endpoint
+  - Healthy / Un-Healthy Threshold 3 default  
+  - interval - 30seconds (can set to 10 seconds - higher cost)
+  - Support protocol Http, Https, TCP
+  - If > 18% of health checker report the endpoint is "Healthy", Route 53 consider it "Healthy", otherwise it is unhealthy
+    Nếu lớn hơn 18% người theo dõi sức khỏe báo cáo endpoit là "Healthy", Route53 sẽ xem là "Healthy", nếu không thì "Un-Healthy"
+  - Ability to choose which locations you want Route53 to use: Có khả năng chọn địa điểm bạn muốn route53 để sử dụng
+- Healthy Checks only pass only when the endpoit respond with the 2xx, 3xx status code
+- Health checks can be setup to pass/fail on the text in the first 5120 bytes of the response
+  Health checks có thể cài đặt để pass/fail trên 5120 bytes đầu của giá trị text trả về
+- Configure you route/firewall to allow Health checks incoming requests from Route53 Health Check: Cấu hình định tuyến/ tường lửa của bạn để cho phép Health checks yêu cầu từ route53 Đến
+
+_9.2 Health Checks - Calculated Health Checks_
+![img.png](images/img_41.png)
+- combine the results of multiple Health Checks into a single Health Check: kết hợp kết quả của nhiều Health Checks vào 1 Health Check
+- you can define "Partner of all Health Check"
+- You can use OR, AND, NOT
+- Partner can monitor up to 256 Child Health Check
+- Specify how many of the Child Health Checks need to pass to make the Partner pass:
+  Chỉ định bao nhiêu của Child Health Checks cần vượt qua để Partner vượt qua
+- Use Case: Perform maintenance to your website without causing all health checks to fail: 
+  Thực hiện bảo trì website của bạn mà không gây ra tất cả Health Checks lỗi
+
+_9.3 Health Checks - Private Hosted Zone_
+![img.png](images/img_42.png)
+- Route53 Health Checks are outside the VPC
+- Health Checks can't access private endpoint (private VPC or on-premises ): Health Checks không thể truy cập vào Privete endpoint (Private VPC hoặc tài nguyên trên cơ sở )
+- You can Create a ClouldWatch Metric and associate ClouldWatch Alarm, then create Health Checks that checks the alarm itself
+  Bạn có thể tạo 1 ClouldWatch Số liệu và kết hợp với ClouldWatch Alarm, sau đó Health Checks kiểm tra cảnh báo của chính nó
+
+**10. Routing Policies - Failover (Active-Passive)**
+
+![img.png](images/img_43.png)
+
+**11. Routing Policies - Geolocation**
+- Different from Latency-based
+- This routing is based on user location
+- Specify location by Continent, Country or even more precise(the most precise location is going to selected)
+  Chỉ định vị trí theo Lục địa, quốc gia hoặc thậm chí còn chính xác hơn (chế độ chính xác địa điểm sẽ được chọn)
+- Should create a "Default" record (in case there is no match on location):
+  Nên tạo 1 Record mặc định (trong trường hợp này sẽ khong có địa điểm phù hợp thì được chuyển hướng đến đây)
+- Use case: website localization, restrict content distribution, load balancing ...
+  Trường hợp xử dụng website nội địa, hạn chế phân tán nội dung, cân bằng tải ...
+- Can be associated Health Check
+
+**12. Routing Policies - Geoproximity**
+![img.png](images/img_44.png)
+![img.png](images/img_45.png)
+- Route traffic to your resource based on the geographic location of users and resource
+  Định tuyến lưu lượng truy đến tài nguyên của bạn dựa trên vị trí địa lý của người dùng hoặc tài nguyên
+- Ability to shift more traffic to resources based on the define "Bias"
+  Có khả năng chuyển nhiều hơn lưu lượng đến tài nguyên, dựa trên xác định "Bias"
+- To change the size of the geographic region, specify "Bias" value:
+  Để thay đổi kích cỡ của Vùng địa lý, xác định giá trị "Bias"
+  - to expand the Bias value (1 to 99) - more traffic to the resource: bạn nhiều giá trị lưu lượng hơn đến resource - mở rông giá trị sai lệch (1 đến 99)
+  - to shrink the Bias value (-1 to -99) - less traffic to the resource: bạn ít giá trị lưu lượng hơn đến resource - mở rút lại giá trị sai lệch (-1 đến -99)
+- Resources can be:
+  - AWS resources (specific AWS region)
+  - non-AWS resources (specific Latitude and Longitude) Latitude - vĩ dộ, Longitude - kinh độ
+- You must use Route53 Traffic Flow (advanced) to be able to leverage Bias: bạn phải sử dung Route 53 Traffic Flow để có thể tận dụng Bias
+
+_12.1 Traffic Flow_
+
+- Simplify the process of creating and maintaining records in large and complex configurations
+ Đơn giản xử lý của tạo mới hoặc bảo trì record trong Cấu hình lớn và phức tạp
+- Visual editor to manage complex routing decision trees: trực qian biên tập viên để quản lý định tuyến cây quyết định phức tạp 
+- Configuration can be save as Traffic Flow Policies:
+  - Can be applied to different Route53 Hosted Zone (Different domain name)
+
+**13.Routing Policies - Multi Value**
+
+- Use when routing traffic to multiple resources
+- Route53 return multiple value/resource
+- Can be associated with Health Checks (return only value for healthy resource)
+- Up to 8 healthy records are returned for each Multi-value query
+- Multi-value is not substitute for having an ELB, the idea for Multi Value is the client-side load balancing
+
+**14.  3rd Party & Route 53**
+_14.1 Domain Registrar vs DNS Service_
+
+- You buy or register your domain name with a Doamin Registrar typically by paying annual charges (eg. godaddy, amazon registrar inc, ...)
+  Bạn có thể mua hoặc đăng ký tên miền của bạn với nhà cung cấp domain tiêu biểu bằng thanh toán chi phí hàng năm
+- The Domain Registrar usually provides for you with a DNS Service to manage your DNS record
+  The Domain Registrar thường cung cấp cho bạn với 1 DNS Service để quản lý DNS record
+- But you can use another DNS service to manage your DNS records
+
+_14.2 3rd Party Registrar with Amazon Route53: Nhà cung cấp thứ 3 với Route53_
+
+- if you buy domain on a 3rd party registrar, you can still use Route53 as the DNS service provider
+  - 1 Create Public hosted zone in Route 53
+  - 2 Update NS Records on 3rd party website to use Route53 Name Service
+- Domain Register != DNS Service
+- But every Domain Registrar usually comes with some DNS features
